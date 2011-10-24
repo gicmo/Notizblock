@@ -264,7 +264,11 @@ class NotebookConnection(object):
     def start_service(self):
         from IPython.frontend.html.notebook.notebookapp import NotebookApp
         app = NotebookApp()
-        nb_argv = ['notebook', '--pylab=inline', '--no-browser', '--parent=True']
+        notebook_path = os.path.expanduser('~/.notizblock')
+        if not os.path.exists(notebook_path):
+            os.mkdir(notebook_path)
+        nbdir = '--notebook-dir=%s' % notebook_path
+        nb_argv = ['notebook', '--pylab=inline', '--no-browser', '--parent=True', nbdir]
         app.initialize(argv=nb_argv)
         self._host = app.ip
         self._port = app.port
