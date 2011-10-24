@@ -457,6 +457,15 @@ class Notebook(webkit.WebView):
     def show_keyboard_shortcuts(self):
         self.execute_script("IPython.notebook.toggle_keyboard_shortcuts();")
         
+
+
+def UIAction(name, tooltip=None, stock_id=None, label=None, accelerator=""):
+    args = locals()
+    def decorator(func):
+        func.ui_action = args
+        return func
+    return decorator
+
 class ShellWindow(gtk.Window):
 
     ui_info = '''<ui>
