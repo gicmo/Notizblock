@@ -298,13 +298,16 @@ class DashboardModel(gtk.ListStore):
                 self.remove(iter)
             else:
                 old[nid] = name
+                print name, newnbs[nid]
+                if name != newnbs[nid]:
+                    self.set_value(iter, 0, newnbs[nid])
 
             iter = self.iter_next(iter)
-
 
         for item in newnbs.iterkeys():
             if not old.has_key(item):
                 self.append([newnbs[item], item])
+        
 
 
 class DashboardView(gtk.TreeView):
