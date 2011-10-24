@@ -437,6 +437,19 @@ class Notebook(webkit.WebView):
     def cell_2_markdown(self):
         self.execute_script("IPython.notebook.to_markdown();")
 
+    def cell_toggle_linenumbers(self):
+        self.execute_script("IPython.notebook.cell_toggle_line_numbers();")
+
+    def cell_set_code(self, code):
+        script = "IPython.notebook.selected_cell().set_code('%s')" % code
+        self.execute_script(script)
+
+    def execute(self, all_cells=False):
+        if not all_cells:
+            self.execute_script("IPython.notebook.execute_selected_cell();")
+        else:
+            self.execute_script("IPython.notebook.execute_all_cells();")
+
     def show_keyboard_shortcuts(self):
         self.execute_script("IPython.notebook.toggle_keyboard_shortcuts();")
         
