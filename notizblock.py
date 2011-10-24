@@ -516,7 +516,7 @@ class ShellWindow(gtk.Window):
 
     @property
     def ui_actions(self):
-        actions = (
+        actions = [
           ( "NotebookMenu", None, "_Notebook" ),
           ( "CellMenu",     None, "_Cell" ),
           ( "ExecuteMenu",  None, "_Execute"),
@@ -601,7 +601,15 @@ class ShellWindow(gtk.Window):
             "All cells", "",
             "Execute all cells",
             self.execute_all ),
-          )
+          ]
+
+        for (key, val) in self.__class__.__dict__.iteritems():
+            if hasattr(val, "ui_action"):
+                a = val.ui_action
+                action = (a['name'], a['stock_id'], a['label'],
+                          a['accelerator'], a['tooltip'], getattr(self, key))
+                actions.append(action)
+
         return actions
 
 
