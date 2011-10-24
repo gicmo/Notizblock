@@ -521,14 +521,6 @@ class ShellWindow(gtk.Window):
           ( "CellMenu",     None, "_Cell" ),
           ( "ExecuteMenu",  None, "_Execute"),
           ( "HelpMenu",     None, "_Help" ),
-          ( "Rename", None,
-            "_Rename...", "",
-            "Rename the notebook",
-            self.notebook_rename ),
-          ( "NewNB", gtk.STOCK_NEW,
-            "_New", "<control>N",
-            "Create a new notebook",
-            self.notebook_new ),
           ( "FileOpen", gtk.STOCK_OPEN,
             "_Open...", None,
             "Open a File",
@@ -694,6 +686,7 @@ class ShellWindow(gtk.Window):
     def activate_action(self, action):
         print action
 
+    @UIAction('NewNB', label='_New', stock_id=gtk.STOCK_NEW, accelerator='<control>N', tooltip='Create a new Notebook')
     def notebook_new(self, action):
         nbc = self._nbc
         newId = nbc.new_notebook()
@@ -765,6 +758,7 @@ class ShellWindow(gtk.Window):
     def notebook_save(self, action):
         self.notebook.save()
 
+    @UIAction("Rename", label='_Rename...', tooltip='Rename the notebook')
     def notebook_rename(self, action):
         dialog = gtk.Dialog(title="Rename Notebook",
                             parent=self,
