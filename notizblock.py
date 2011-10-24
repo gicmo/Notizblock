@@ -407,6 +407,8 @@ class Notebook(webkit.WebView):
         self.load_html_string(html, base_uri=self._nbc.baseUrl)
 
     def save(self):
+        script = "IPython.save_widget.set_notebook_name('%s');" % self.name
+        self.execute_script(script)
         script = "IPython.notebook.save_notebook('%s');" % self.name
         self.execute_script(script)
 
