@@ -191,7 +191,6 @@ class NotebookConnection(object):
         
     def getNotebooks(self):
         try:
-            print self.baseUrl
             url = self.baseUrl + "notebooks"
             response = urllib2.urlopen (url)
             notebooks = json.load(response)
