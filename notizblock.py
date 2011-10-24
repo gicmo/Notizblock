@@ -458,6 +458,7 @@ class ShellWindow(gtk.Window):
     ui_info = '''<ui>
       <menubar name='MenuBar'>
         <menu name='NotebookMenu' action='NotebookMenu'>
+          <menuitem action='Rename'/>
           <menuitem action='NewNB'/>
           <menuitem action='FileOpen'/>
           <menuitem name='Save' action='Save' />
@@ -477,6 +478,12 @@ class ShellWindow(gtk.Window):
           <separator/>
           <menuitem action='CellMoveUp'/>
           <menuitem action='CellMoveDown'/>
+          <separator/>
+          <menuitem action='CellToggleLN'/>
+        </menu>
+        <menu action='ExecuteMenu'>
+          <menuitem action='ExecuteCell'/>
+          <menuitem action='ExecuteAll'/>
         </menu>
         <menu action='HelpMenu'>
           <menuitem action='HelpShortcuts'/>
@@ -487,8 +494,8 @@ class ShellWindow(gtk.Window):
       </menubar>
       <toolbar name='ToolBar'>
         <toolitem name='Save' action='Save' />
-        <separator/>
         <toolitem name='New' action='NewNB' />
+        <separator/>
         <toolitem name='Open' action='FileOpen' />
         <toolitem name='Save to disk' action='Download' />
         <separator/>
@@ -498,14 +505,19 @@ class ShellWindow(gtk.Window):
     def ui_actions(self):
         actions = (
           ( "NotebookMenu", None, "_Notebook" ),
-          ( "CellMenu", None, "_Cell" ),
-          ( "HelpMenu", None, "_Help" ),
+          ( "CellMenu",     None, "_Cell" ),
+          ( "ExecuteMenu",  None, "_Execute"),
+          ( "HelpMenu",     None, "_Help" ),
+          ( "Rename...", None,
+            "_Rename", "",
+            "Rename the notebook",
+            self.notebook_rename ),
           ( "NewNB", gtk.STOCK_NEW,
             "_New", "<control>N",
             "Create a new notebook",
             self.notebook_new ),
           ( "FileOpen", gtk.STOCK_OPEN,
-            "_Open", None,
+            "_Open...", None,
             "Open a File",
             self.notebook_open ),
           ( "Save", gtk.STOCK_SAVE,
@@ -513,7 +525,7 @@ class ShellWindow(gtk.Window):
             "Save the current notebook",
             self.notebook_save ),
           ( "Download", gtk.STOCK_HARDDISK,
-            "Save to disk", None,
+            "Save to disk...", None,
             "Download the current notebook",
             self.notebook_download ),
           ( "DeleteNB", gtk.STOCK_NEW,
@@ -564,6 +576,18 @@ class ShellWindow(gtk.Window):
             "Move down", "",
             "Move cell down",
             self.cell_move_down ),
+          ( "CellToggleLN", None,
+            "Toggle Linenumbers", "",
+            "Toggle the line numbers",
+            self.cell_toggle_linenumbers ),
+          ( "ExecuteCell", None,
+            "Selected cell", "",
+            "Execute the currenlty selected cell",
+            self.execute_cell ),
+          ( "ExecuteAll", None,
+            "All cells", "",
+            "Execute all cells",
+            self.execute_all ),
           )
         return actions
 
@@ -720,6 +744,40 @@ class ShellWindow(gtk.Window):
     def notebook_save(self, action):
         self.notebook.save()
 
+    def notebook_rename(self, action):
+        dialog = gtk.Dialog(title="Rename Notebook",
+                            parent=self,
+                            flags=gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
+                                     gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+        
+        entry = gtk.Entry(max=20)
+        entry.set_text (self.notebook.name)
+
+        hbox = gtk.HBox()
+        hbox.pack_start(gtk.Label("New name:"))
+        hbox.pack_start(entry)
+
+        dialog.vbox.pack_start(hbox)
+
+        dialog.connect("response", self.notebook_rename_response, entry)
+        dialog.show_all()
+
+    def notebook_rename_response(self, dialog, response_id, entry):
+        if response_id != gtk.RESPONSE_ACCEPT:
+            dialog.destroy()
+            return
+        print entry.get_text()
+        self.notebook.name = entry.get_text()
+        self.notebook.save()
+        # self._model.update()
+        # model.update() seems racy.
+        selection = self._view.get_selection()
+        model, tree_iter = selection.get_selected()
+        model.set_value(tree_iter, 0, self.notebook.name);
+
+        dialog.destroy()
+        
     def cell_delete(self, action):
         self.notebook.cell_delete()
 
@@ -740,6 +798,15 @@ class ShellWindow(gtk.Window):
         
     def cell_move_down(self, action):
         self.notebook.cell_move_down()
+
+    def cell_toggle_linenumbers(self, action):
+        self.notebook.cell_toggle_linenumbers()
+
+    def execute_all(self, action):
+        self.notebook.execute(all_cells=True)
+
+    def execute_cell(self, action):
+        self.notebook.execute()
 
     def help_shortcuts(self, action):
         self.notebook.show_keyboard_shortcuts()
