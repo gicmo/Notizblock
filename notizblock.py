@@ -388,6 +388,10 @@ class Notebook(webkit.WebView):
     def name(self):
         return self._name
 
+    @name.setter
+    def name(self, new_name):
+        self._name = new_name
+
     # Notebook methods
     def load(self, notebookdId):
         if self._id == notebookdId:
