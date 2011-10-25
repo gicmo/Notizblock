@@ -184,8 +184,8 @@ def _ip_process_func(app):
     app.start()
 
 class NotebookConnection(object):
-    def __init__(self, port=8888):
-        self._port = port
+    def __init__(self):
+        self._port = 0
         self._host = '127.0.0.1'
         self._ip_process = None
         
