@@ -521,78 +521,12 @@ class ShellWindow(gtk.Window):
           ( "CellMenu",     None, "_Cell" ),
           ( "ExecuteMenu",  None, "_Execute"),
           ( "HelpMenu",     None, "_Help" ),
-          ( "FileOpen", gtk.STOCK_OPEN,
-            "_Open...", None,
-            "Open a File",
-            self.notebook_open ),
-          ( "Save", gtk.STOCK_SAVE,
-            "_Save", None,
-            "Save the current notebook",
-            self.notebook_save ),
-          ( "Download", gtk.STOCK_HARDDISK,
-            "Save to disk...", None,
-            "Download the current notebook",
-            self.notebook_download ),
-          ( "DeleteNB", gtk.STOCK_NEW,
-            "_Delete", "",
-            "Delete the notebook",
-            self.notebook_delete ),
-          ( "Quit", gtk.STOCK_QUIT,
-            "_Quit", "<control>Q",
-            "Quit",
-            self.destroy_cb ),
-          ( "HelpShortcuts", None,
-            "Keyboard Shortcuts", "",
-            "Display the keyboard shortcuts",
-            self.help_shortcuts ),
-          ( "About", None,
-            "_About", "",
-            "About",
-            self.show_about ),
+
           ( "VisitHP", None,
             "Visit Homepage", "",
             "Go to the Notizblock Homepage",
             self.activate_action ),
-           ( "CellDelete", None,
-            "Delete Cell", "",
-            "Delete the currently selected cell",
-            self.cell_delete ),
-          ( "CellInsAbove", None,
-            "Insert above", "",
-            "Insert a code cell above",
-            self.cell_insert_above ),
-          ( "CellInsBelow", None,
-            "Insert below", "",
-            "Insert a code cell below",
-            self.cell_insert_below ),
-          ( "Cell2Code", None,
-            "Format as Code", "",
-            "Format cell as code block",
-            self.cell_to_code ),
-          ( "Cell2Markdown", None,
-            "Format as Markdown", "",
-            "Format cell as markdown block",
-            self.cell_to_markdown ),
-          ( "CellMoveUp", None,
-            "Move up", "",
-            "Move cell up",
-            self.cell_move_up ),
-          ( "CellMoveDown", None,
-            "Move down", "",
-            "Move cell down",
-            self.cell_move_down ),
-          ( "CellToggleLN", None,
-            "Toggle Linenumbers", "",
-            "Toggle the line numbers",
-            self.cell_toggle_linenumbers ),
-          ( "ExecuteCell", None,
-            "Selected cell", "",
-            "Execute the currenlty selected cell",
-            self.execute_cell ),
-          ( "ExecuteAll", None,
-            "All cells", "",
-            "Execute all cells",
-            self.execute_all ),
+
           ]
 
         for (key, val) in self.__class__.__dict__.iteritems():
@@ -694,6 +628,8 @@ class ShellWindow(gtk.Window):
         self.notebook.load(newId)
         self._view.select(newId)
 
+
+    @UIAction('DeleteNB', label='_Delete', stock_id=gtk.STOCK_NEW, tooltip="Delete the notebook")
     def notebook_delete(self, action):
         nbc = self._nbc
         nid = self.notebook.id
@@ -703,6 +639,7 @@ class ShellWindow(gtk.Window):
         nbc.delete_notebook(nid)
         self._model.update()
 
+    @UIAction('Download', label='Save to disk...', stock_id=gtk.STOCK_SAVE, tooltip='Download the current notebook')
     def notebook_download(self, action):
         chooser = gtk.FileChooserDialog(title="Save Notebook",
                                         action=gtk.FILE_CHOOSER_ACTION_SAVE,
@@ -733,6 +670,7 @@ class ShellWindow(gtk.Window):
         nbc.download_notebook(nid, uri)
         chooser.destroy()
 
+    @UIAction('FileOpen', label='_Open...', stock_id=gtk.STOCK_OPEN, tooltip='Open a notebook')
     def notebook_open(self, action):
         chooser = gtk.FileChooserDialog(title="Open Notebook",
                                         parent=self,
@@ -755,6 +693,7 @@ class ShellWindow(gtk.Window):
 
         chooser.destroy()
 
+    @UIAction('Save', label='_Save', stock_id=gtk.STOCK_SAVE, tooltip='Save the current notebook')
     def notebook_save(self, action):
         self.notebook.save()
 
@@ -792,40 +731,52 @@ class ShellWindow(gtk.Window):
         model.set_value(tree_iter, 0, self.notebook.name);
 
         dialog.destroy()
-        
+
+    @UIAction('CellDelete', label='Delete cell', tooltip='Delete the current cell')
     def cell_delete(self, action):
         self.notebook.cell_delete()
 
+    @UIAction('CellInsAbove', label='Insert above', tooltip='Insert a code cell above')
     def cell_insert_above(self, action):
         self.notebook.cell_insert_above()
 
+    @UIAction('CellInsBelow', label='Insert below', tooltip='Insert a code cell below')
     def cell_insert_below(self, action):
         self.notebook.cell_insert_below()
 
+    @UIAction('Cell2Code', label='Format as Code', tooltip='Format cell as code block')
     def cell_to_code(self, action):
         self.notebook.cell_2_code()
 
+    @UIAction('Cell2Markdown', label='Format as Markdown', tooltip='Format cell as markdown block')
     def cell_to_markdown(self, action):
         self.notebook.cell_2_markdown()
 
+    @UIAction('CellMoveUp', label='Move up', tooltip='Move the current cell up')
     def cell_move_up(self, action):
         self.notebook.cell_move_up()
-        
+
+    @UIAction('CellMoveDown', label='Move down', tooltip='Move the current cell down')
     def cell_move_down(self, action):
         self.notebook.cell_move_down()
 
+    @UIAction('CellToggleLN', label='Toggle Line-numbers', tooltip='Toogle line numbering')
     def cell_toggle_linenumbers(self, action):
         self.notebook.cell_toggle_linenumbers()
 
+    @UIAction('ExecuteAll', label='All cells', tooltip='Execute all cells')
     def execute_all(self, action):
         self.notebook.execute(all_cells=True)
 
+    @UIAction('ExecuteCell', label='Selected cell', tooltip='Execute the selected cell')
     def execute_cell(self, action):
         self.notebook.execute()
 
+    @UIAction('HelpShortcuts', label='Keyboard Shortcuts', tooltip='Display the available keyboard shortcuts')
     def help_shortcuts(self, action):
         self.notebook.show_keyboard_shortcuts()
 
+    @UIAction('About', label='_About', stock_id=gtk.STOCK_ABOUT, tooltip='About')
     def show_about(self, action):
         #logo = self.render_icon("notizblock-logo", gtk.ICON_SIZE_DIALOG)
         
@@ -842,6 +793,7 @@ class ShellWindow(gtk.Window):
         dialog.connect ("response", lambda d, r: d.destroy())
         dialog.show()
 
+    @UIAction('Quit', label='_Quit', stock_id=gtk.STOCK_QUIT, accelerator='<control>Q', tooltip='Quit the application')
     def destroy_cb(self, arg):
         self._nbc.stop_service()
         gtk.main_quit()
