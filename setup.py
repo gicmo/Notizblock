@@ -9,7 +9,7 @@ from distutils.core import setup
 import setuptools
 
 setup (name             = 'notizblock',
-       version          = '0.1.0',
+       version          = '0.1.1',
        author           = 'Christian Kellner',
        author_email     = 'kellner@biologie.uni-muenchen.de',
        url              = 'https://github.com/gicmo/Notizblock',
@@ -17,5 +17,5 @@ setup (name             = 'notizblock',
        long_description = "\n".join(__doc__.split("\n")[2:]),
        packages         = ['IPNotizblock'],
        scripts          = ['notizblock'],
-       data_files       = [('share/applications'), ['notizblock.desktop']]
+       data_files       = [('/usr/share/applications', ['notizblock.desktop'])]
        )
