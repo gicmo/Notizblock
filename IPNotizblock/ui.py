@@ -472,7 +472,7 @@ class ShellWindow(gtk.Window):
         # window setup
         self.set_title('Notizblock - IPython Notebook Shell')
         self.connect('destroy', self.destroy_cb)
-        self.set_default_size(800, 600)
+        self.set_default_size(1100, 600)
         self.add(table)
 
         self._view = view
