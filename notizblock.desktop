@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=IPython Notizblock
+Comment=Shell for IPython Notebooks
+TryExec=notizblock
+Exec=notizblock
+Type=Application
+Terminal=False
+Categories=Science;
+Icon=accessories-text-editor
