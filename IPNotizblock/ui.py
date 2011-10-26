@@ -375,8 +375,13 @@ class ShellWindow(gtk.Window):
           <menuitem action='ExecuteAll'/>
         </menu>
         <menu action='HelpMenu'>
+          <menuitem action='HelpPython'/>
+          <menuitem action='HelpNumPy'/>
+          <menuitem action='HelpSciPy'/>
+          <menuitem action='HelpMPL'/>
+          <menuitem action='HelpSymPy'/>
+          <separator/>
           <menuitem action='HelpShortcuts'/>
-          <menuitem action='VisitHP'/>
           <separator/>
           <menuitem action='About'/>
         </menu>
@@ -488,6 +493,11 @@ class ShellWindow(gtk.Window):
     @property
     def remote_teaching_uri(self):
         return 'dav://localhost/teaching/'
+
+    def visit_uri(self, uri, timestamp=None):
+        if not timestamp:
+            timestamp = gtk.get_current_event_time()
+        gtk.show_uri(self.get_screen(), uri, timestamp)
 
     def on_notebook_loaded(self):
         self._model.update()
@@ -678,6 +688,25 @@ class ShellWindow(gtk.Window):
         self._nbc.stop_service()
         gtk.main_quit()
 
+    @UIAction('HelpPython', label='Python')
+    def on_help_python(self, action):
+        self.visit_uri('http://docs.python.org/')
+
+    @UIAction('HelpNumPy', label='NumPy')
+    def on_help_numpu(self, action):
+        self.visit_uri('http://docs.scipy.org/doc/numpy/reference/')
+
+    @UIAction('HelpSciPy', label='SciPy')
+    def on_help_scipy(self, action):
+        self.visit_uri('http://docs.scipy.org/doc/scipy/reference/')
+
+    @UIAction('HelpMPL', label='matplotlib')
+    def on_help_matplotlib(self, action):
+        self.visit_uri('http://matplotlib.sourceforge.net/')
+
+    @UIAction('HelpSymPy', label='SymPy')
+    def on_help_sympy(self, action):
+        self.visit_uri('http://docs.sympy.org')
 
 def main(argv):
     try:
