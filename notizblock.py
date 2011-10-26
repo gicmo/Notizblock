@@ -803,7 +803,8 @@ def main(argv):
     try:
         from ctypes import cdll
         libc = cdll.LoadLibrary("libc.so.6")
-        libc.prctl (15, 'IPython Shell', 0, 0, 0)
+        #define PR_SET_NAME 15
+        libc.prctl (15, 'Notizblock', 0, 0, 0)
     except:
         pass
 
