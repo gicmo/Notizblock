@@ -115,8 +115,10 @@ sudo python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 
 ABOUT_PAGE = """
 <html><head><title>IPython Notebook Gtk Shell</title></head><body>
-<h1>Welcome to Lecture Title Excercise Class</h1>
-<p>This is a cool intro Text that we need to come up with ...<br/>
+<h1>Welcome to Notizblock</h1>
+<h3>The IPython Notebook Gtk+ Shell</h3>
+<p>To start select one of the available notebooks (right panel); if the list is empty create a new one or open an
+existing one from the Notebook menu.<br/>
 </p>
 <span id='notebook_id' style='dsiplay:none;'></span>
 <input id='notebook_name' style='display:none;'/>
