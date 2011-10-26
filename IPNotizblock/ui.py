@@ -609,6 +609,10 @@ class ShellWindow(gtk.Window):
     def notebook(self):
         return self._nb_handle
 
+    @property
+    def remote_teaching_uri(self):
+        return 'dav://localhost/teaching/'
+
     def on_notebook_loaded(self):
         self._model.update()
         print "Notebook loaded (%s, %s)" % (self.notebook.name, self.notebook.id)
@@ -676,6 +680,7 @@ class ShellWindow(gtk.Window):
                                         parent=self,
                                         buttons=(gtk.STOCK_OPEN, gtk.RESPONSE_OK,
                                                  gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+        chooser.add_shortcut_folder_uri(self.remote_teaching_uri)
         chooser.connect("response", self.notebook_open_response)
         chooser.show()
 
@@ -685,7 +690,6 @@ class ShellWindow(gtk.Window):
             return
 
         uri = chooser.get_uri()
-        print uri
         newId = self._nbc.upload_notebook(uri)
         self._model.update()
         self.notebook.load(newId)
