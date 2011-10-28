@@ -31,7 +31,6 @@ __copyright__ = " Christian Kellner"
 __license__ = "New BSD License"
 
 
-import sys
 import gtk
 import webkit
 import gio
@@ -603,21 +602,3 @@ class ShellWindow(gtk.Window):
     @UIAction('HelpSymPy', label='SymPy')
     def on_help_sympy(self, action):
         self.visit_uri('http://docs.sympy.org')
-
-def main(argv):
-    try:
-        from ctypes import cdll
-        libc = cdll.LoadLibrary("libc.so.6")
-        #define PR_SET_NAME 15
-        libc.prctl (15, 'Notizblock', 0, 0, 0)
-    except:
-        pass
-
-    wnd = ShellWindow()
-    gtk.main()
-
-if __name__ == '__main__':
-    res = main(sys.argv[1:])
-    sys.exit(res)
-
-
