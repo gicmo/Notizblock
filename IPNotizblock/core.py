@@ -7,7 +7,7 @@ import httplib as http
 def _ip_process_func(app):
     app.start()
 
-class NotebookConnection(object):
+class NotebookManager(object):
     def __init__(self):
         self._port = 0
         self._host = '127.0.0.1'

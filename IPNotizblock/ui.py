@@ -36,7 +36,7 @@ import gtk
 import webkit
 import gio
 from html_templates import *
-from core import NotebookConnection
+from core import NotebookManager
 
 class Event(object):
     def __init__(self):
@@ -55,13 +55,13 @@ class Event(object):
 
 
 class DashboardModel(gtk.ListStore):
-    def __init__(self, nbc):
+    def __init__(self, nbm):
         gtk.ListStore.__init__(self, str, str)
-        self._nbc = nbc
+        self._nbm = nbm
 
     def update(self):
-        nbc = self._nbc
-        notebooks = nbc.getNotebooks()
+        nbm = self._nbm
+        notebooks = nbm.getNotebooks()
 
         newnbs = {nb['notebook_id'] : nb['name'] for nb in notebooks}
 
@@ -139,12 +139,12 @@ class DashboardView(gtk.TreeView):
 
 class Notebook(webkit.WebView):
 
-    def __init__(self, nbc):
+    def __init__(self, nbm):
         webkit.WebView.__init__(self)
         self.set_full_content_zoom(True)
         self._id = None
         self.load_string(ABOUT_PAGE, "text/html", "iso-8859-15", "about")
-        self._nbc = nbc
+        self._nbm = nbm
         self.connect("notify::load-status", self._load_status_changed)
 
     def _load_status_changed(self, *args, **kwargs):
@@ -183,7 +183,7 @@ class Notebook(webkit.WebView):
             return
 
         html = IPYTHON_NOTEBOOK_HTML.replace("@NOTEBOOK_ID@", self._id)
-        self.load_html_string(html, base_uri=self._nbc.baseUrl)
+        self.load_html_string(html, base_uri=self._nbm.baseUrl)
 
     def save(self):
         script = "IPython.save_widget.set_notebook_name('%s');" % self.name
@@ -319,13 +319,13 @@ class ShellWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
 
-        nbc = NotebookConnection()
+        nbm = NotebookManager()
 
-        nbc.start_service() # This will actually start the ipython session
+        nbm.start_service() # This will actually start the ipython session
         
-        model = DashboardModel(nbc)
+        model = DashboardModel(nbm)
         view = DashboardView (model)
-        notebook = Notebook(nbc)
+        notebook = Notebook(nbm)
 
         hpane = gtk.HPaned()
         hpane.add1 (view)
@@ -374,7 +374,7 @@ class ShellWindow(gtk.Window):
         self._view = view
         self._nb_handle = notebook
         self._model = model
-        self._nbc = nbc
+        self._nbm = nbm
 
         self.show_all()
         view.unselect_all()
@@ -408,8 +408,8 @@ class ShellWindow(gtk.Window):
 
     @UIAction('NewNB', label='_New', stock_id=gtk.STOCK_NEW, accelerator='<control>N', tooltip='Create a new Notebook')
     def notebook_new(self, action):
-        nbc = self._nbc
-        newId = nbc.new_notebook()
+        nbm = self._nbm
+        newId = nbm.new_notebook()
         self._model.update()
         self.notebook.load(newId)
         self._view.select(newId)
@@ -417,12 +417,12 @@ class ShellWindow(gtk.Window):
 
     @UIAction('DeleteNB', label='_Delete', stock_id=gtk.STOCK_NEW, tooltip="Delete the notebook")
     def notebook_delete(self, action):
-        nbc = self._nbc
+        nbm = self._nbm
         nid = self.notebook.id
         self.notebook.load(None)
         self.notebook.grab_focus()
         self._view.unselect_all()
-        nbc.delete_notebook(nid)
+        nbm.delete_notebook(nid)
         self._model.update()
 
     @UIAction('Download', label='Save to disk...', stock_id=gtk.STOCK_SAVE, tooltip='Download the current notebook')
@@ -448,12 +448,12 @@ class ShellWindow(gtk.Window):
             chooser.destroy()
             return
 
-        nbc = self._nbc
+        nbm = self._nbm
         nid = self.notebook.id
         uri = chooser.get_uri()
         if not uri.lower().endswith('.ipynb'):
             uri += '.ipynb'
-        nbc.download_notebook(nid, uri)
+        nbm.download_notebook(nid, uri)
         chooser.destroy()
 
     @UIAction('FileOpen', label='_Open...', stock_id=gtk.STOCK_OPEN, tooltip='Open a notebook')
@@ -472,7 +472,7 @@ class ShellWindow(gtk.Window):
             return
 
         uri = chooser.get_uri()
-        newId = self._nbc.upload_notebook(uri)
+        newId = self._nbm.upload_notebook(uri)
         self._model.update()
         self.notebook.load(newId)
         self._view.select(newId)
@@ -581,7 +581,7 @@ class ShellWindow(gtk.Window):
 
     @UIAction('Quit', label='_Quit', stock_id=gtk.STOCK_QUIT, accelerator='<control>Q', tooltip='Quit the application')
     def destroy_cb(self, arg):
-        self._nbc.stop_service()
+        self._nbm.stop_service()
         gtk.main_quit()
 
     @UIAction('HelpPython', label='Python')
