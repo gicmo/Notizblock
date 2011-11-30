@@ -4,28 +4,8 @@ IPYTHON_NOTEBOOK_HTML="""
 <head>
 <meta charset="utf-8">
 <title>IPython Notebook</title>
-<link rel="stylesheet" href="static/jquery/css/themes/aristo/jquery-wijmo.css" type="text/css" />
-<!-- <link rel="stylesheet" href="static/jquery/css/themes/rocket/jquery-wijmo.css" type="text/css" /> -->
-<!-- <link rel="stylesheet" href="static/jquery/css/themes/smoothness/jquery-ui-1.8.14.custom.css" type="text/css" />-->
-<!-- <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" charset="utf-8"></script> -->
 <script type='text/javascript' src='static/mathjax/MathJax.js?config=TeX-AMS_HTML' charset='utf-8'></script>
-<script type="text/javascript">
-function CheckMathJax(){
-var div=document.getElementById("MathJaxFetchingWarning")
-if(window.MathJax){
-document.body.removeChild(div)
-}
-else{
-div.style.display = "block";
-}
-}
-if (typeof MathJax == 'undefined') {
-console.log("No local MathJax, loading from CDN");
-document.write(unescape("%3Cscript type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js%3Fconfig=TeX-AMS_HTML' charset='utf-8'%3E%3C/script%3E"));
-}else{
-console.log("Using local MathJax");
-}
-</script>
+<link rel="stylesheet" href="static/jquery/css/themes/aristo/jquery-wijmo.css" type="text/css" />
 <link rel="stylesheet" href="static/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="static/codemirror/mode/markdown/markdown.css">
 <link rel="stylesheet" href="static/codemirror/mode/rst/rst.css">
@@ -37,8 +17,10 @@ console.log("Using local MathJax");
 <link rel="stylesheet" href="static/css/base.css" type="text/css" />
 <link rel="stylesheet" href="static/css/notebook.css" type="text/css" />
 <link rel="stylesheet" href="static/css/renderedhtml.css" type="text/css" />
+<meta name="read_only" content="False"/>
 </head>
-<body onload='CheckMathJax();' data-project=/home/gicmo data-notebook-id=@NOTEBOOK_ID@ data-base-project-url=/ data-base-kernel-url=/>
+<body
+data-project=/ data-notebook-id=@NOTEBOOK_ID@ data-base-project-url=/ data-base-kernel-url=/ >
 <div id="header" style="display: none; height: 0px;">
 <span id="save_widget" style="display: none;">
 <input type="text" id="notebook_name" size="20" style="display: none;"></textarea>
@@ -68,8 +50,6 @@ sudo python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 </p>
 </div>
 <div id="main_app">
-
-<div id="left_panel_splitter" style="display:none"></div>
 <div id="notebook_panel">
 <div id="notebook"></div>
 <div id="pager_splitter"></div>
@@ -102,6 +82,7 @@ sudo python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 <script src="static/js/savewidget.js" type="text/javascript" charset="utf-8"></script>
 <script src="static/js/quickhelp.js" type="text/javascript" charset="utf-8"></script>
 
+<script src="static/js/loginwidget.js" type="text/javascript" charset="utf-8"></script>
 <script src="static/js/pager.js" type="text/javascript" charset="utf-8"></script>
 <script src="static/js/panelsection.js" type="text/javascript" charset="utf-8"></script>
 <script src="static/js/printwidget.js" type="text/javascript" charset="utf-8"></script>
