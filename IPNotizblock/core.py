@@ -3,6 +3,7 @@ from multiprocessing import Process
 import json
 import urllib2
 import httplib as http
+import gio
 
 def _ip_process_func(app):
     app.start()
