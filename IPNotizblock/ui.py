@@ -438,7 +438,8 @@ class ShellWindow(gtk.Window):
         
         chooser.set_current_name(self.notebook.name + '.ipynb')
         chooser.do_overwrite_confirmation = True
-        
+        chooser.set_local_only(False)
+
         chooser.connect("response", self.notebook_save_response)
         chooser.show()
 
@@ -462,6 +463,7 @@ class ShellWindow(gtk.Window):
                                         buttons=(gtk.STOCK_OPEN, gtk.RESPONSE_OK,
                                                  gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
         chooser.add_shortcut_folder_uri(self.remote_teaching_uri)
+        chooser.set_local_only(False)
         chooser.connect("response", self.notebook_open_response)
         chooser.show()
 
